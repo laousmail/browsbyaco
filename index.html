@@ -498,6 +498,41 @@ body.amb .arch-line{animation-duration:3.2s}
 .w-note{margin-top:22px;font-size:.82rem;color:rgba(210,182,198,.75)}
 body.gate{overflow:hidden}
 
+
+.w-in{max-width:560px}
+.w-mono{padding:20px 30px 16px;margin-bottom:22px}.w-mono .ba{font-size:2.6rem}
+.welcome h2 em{font-style:italic}
+.w-p{color:var(--ink);margin:12px auto 0;max-width:470px;font-size:1.06rem;line-height:1.65}
+.welcome p.w-p{margin:12px auto 0;color:#f3dbe7}
+.w-sig{font-family:var(--disp);font-style:italic;font-size:1.25rem;color:#ffb8d8;margin-top:14px;text-shadow:0 0 12px rgba(255,79,163,.5)}
+.w-amb{margin:26px 0 16px;font-size:.92rem;color:var(--soft);padding-top:20px;border-top:1px solid var(--line)}
+@media(max-height:760px){.w-mono{display:none}}
+.welcome{overflow-y:auto}
+/* FEEDBACK */
+.fb{position:fixed;inset:0;z-index:190;display:grid;place-items:center;padding:16px;background:rgba(18,7,15,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;visibility:hidden;transition:opacity .6s,visibility 0s .6s}
+.fb.on{opacity:1;visibility:visible;transition:opacity .6s}
+.fb-card{position:relative;width:min(560px,100%);max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto;background:linear-gradient(170deg,#3a1832,#22101d);border:1.5px solid #ffc4e0;border-radius:30px;padding:34px 28px 28px;box-shadow:0 0 10px rgba(255,111,181,.7),0 0 60px -10px rgba(255,79,163,.6),0 40px 90px -30px rgba(0,0,0,.9);transform:translateY(24px) scale(.98);transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.fb.on .fb-card{transform:none}
+@media(min-width:640px){.fb-card{padding:42px 44px 34px}}
+.fb-x{position:absolute;top:14px;right:14px;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,150,200,.4);background:none;color:var(--ink);font-size:1.3rem;cursor:pointer}
+.fb h2{margin-top:10px;font-size:clamp(1.8rem,5vw,2.4rem)}
+.fb-p{color:var(--soft);margin:12px 0 16px}
+.fb textarea{width:100%;resize:vertical;min-height:110px;background:rgba(0,0,0,.25);color:var(--ink);border:1px solid rgba(255,150,200,.35);border-radius:16px;padding:14px 16px;font:inherit;font-size:1rem}
+.fb textarea:focus{outline:none;border-color:#ffc4e0;box-shadow:0 0 0 3px rgba(255,79,163,.25)}
+.fb textarea::placeholder{color:rgba(210,182,198,.6)}
+.fb-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+.fb-row .btn{flex:1 1 200px}
+.fb-why{margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}
+.fb-why h3{font-size:1.3rem;margin-bottom:12px}
+.fb-why ul{list-style:none;display:grid;gap:10px}
+.fb-why li{position:relative;padding-left:24px;color:#f3dbe7;font-size:.97rem;line-height:1.55}
+.fb-why li::before{content:"✦";position:absolute;left:0;top:1px;color:#ff8cc4;text-shadow:0 0 8px #ff4fa3;font-size:.8rem}
+.fb-me{margin-top:18px;padding:16px 18px;border-radius:16px;background:rgba(255,111,181,.1);border:1px solid rgba(255,150,200,.25);color:var(--ink);font-size:.97rem}
+.fb-pill{position:fixed;left:16px;bottom:16px;z-index:65;display:none;align-items:center;gap:6px;padding:12px 18px;border-radius:999px;cursor:pointer;color:#ffe6f2;font-weight:600;font-size:.9rem;background:rgba(34,16,29,.9);border:1.5px solid #ffc4e0;box-shadow:0 0 8px rgba(255,111,181,.8),0 0 24px -4px rgba(255,79,163,.7)}
+.fb-pill.on{display:flex}
+@media(max-width:959px){.fb-pill{bottom:86px;left:14px;padding:10px 14px;font-size:.85rem}}
+body.fbopen{overflow:hidden}
+
 </style>
 </head>
 <body class="gate">
@@ -718,11 +753,31 @@ body.gate{overflow:hidden}
     <div class="w-mono"><span class="ba">B<i>A</i></span><small>Brows by A</small></div>
     <div class="w-k" data-t="w_k"></div>
     <h2 id="wTitle" data-h="w_t"></h2>
-    <p data-t="ask_p"></p>
+    <p class="w-p" data-t="w_p1"></p>
+    <p class="w-p" data-t="w_p2"></p>
+    <div class="w-sig" data-t="w_sig"></div>
+    <div class="w-amb" data-t="w_amb"></div>
     <div class="w-row"><button class="btn btn-rose" id="askYes"><span>♪</span>&nbsp;<span data-t="ask_y"></span></button><button class="btn btn-ghost" id="askNo" data-t="ask_n"></button></div>
     <div class="w-note" data-t="w_note"></div>
   </div>
 </div>
+<div class="fb" id="fb" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
+  <div class="fb-card">
+    <button class="fb-x" id="fbX" aria-label="Close">×</button>
+    <div class="w-k" data-t="fb_k"></div>
+    <h2 id="fbTitle" data-h="fb_t"></h2>
+    <p class="fb-p" data-t="fb_p"></p>
+    <textarea id="fbText" rows="4"></textarea>
+    <div class="fb-row"><a class="btn btn-rose" id="fbSms" href="#" data-t="fb_send"></a><button class="btn btn-ghost" id="fbCopy" data-t="fb_copy"></button></div>
+    <div class="fb-why">
+      <h3 data-t="fb_why"></h3>
+      <ul id="fbList"></ul>
+      <p class="fb-me" data-t="fb_me"></p>
+      <div class="w-sig" data-t="w_sig"></div>
+    </div>
+  </div>
+</div>
+<button class="fb-pill" id="fbPill">♡ <span data-t="fb_pill"></span></button>
 <div class="lb" id="lb"><img id="lbImg" alt=""><button id="lbX" aria-label="Close">×</button></div>
 
 <script>
@@ -731,6 +786,7 @@ const IMG={c1:"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUEBAQEAw
 
 const T={
 fr:{
+w_k:"Pensé pour toi",w_t:"Bonjour <em>Asha</em>,",w_p1:"J'ai conçu ce site pour ton salon. Prends le temps de le découvrir, et dis-moi s'il te plaît et si tu en vois le potentiel.",w_p2:"Si oui, je prendrai le temps de le finaliser et de le lancer comme ton vrai site web, avec ton propre nom de domaine.",w_sig:"— Ismail",w_amb:"Pour l'expérience complète, entre avec l'ambiance du salon :",fb_k:"À toi la parole",fb_t:"Dis-moi ce que <em>tu en penses</em>",fb_p:"Qu'est-ce que tu as aimé? Qu'est-ce que tu n'as pas aimé? Dis-moi tout, et je l'ajoute, je le change ou je l'enlève.",fb_ph:"J'ai adoré… Je changerais… J'ajouterais…",fb_send:"Envoyer par texto",fb_copy:"Copier mon message",fb_copied:"Copié ✓",fb_pill:"Ton avis",fb_why:"Ce qu'un site peut faire pour toi",fb_list:["Il s'occupe de tes tâches répétitives : prix, politiques, soins après rendez-vous et réservations sont expliqués 24 h/24, donc moins de messages avec les mêmes questions.","Il travaille tout seul, jour et nuit, et peut t'amener de nouvelles clientes qui te trouvent sur Google.","Plus de clientes, c'est de la place pour grandir, et un jour, embaucher.","Tu seras plus connue à Montréal et partout au Québec."],fb_me:"Je relance l'agence de design web que j'ai fondée en 2021, et j'aimerais beaucoup que Brows by A soit l'un de ses premiers projets.",fb_sms:"Salut Ismail! À propos du site Brows by A : ",
 n1:"Ton style",n2:"Menu",n3:"Résultats",n4:"Asha",n5:"Formations",book:"Réserver",
 h_k:"Studio de sourcils · Laval",h1a:"Des sourcils",h1b:"faits pour toi,",h1c:"<em>tout simplement.</em>",
 lead:"Lamination, brow sculpting et teinture hybride, dessinés sur mesure par Asha. Pour la femme qui veut se réveiller déjà prête.",
@@ -757,9 +813,10 @@ care:[[["Viens démaquillée","sur la zone des sourcils, pour un résultat préc
 faq_t:"Questions <em>fréquentes</em>",
 faq:[["Lamination ou brow sculpt : que choisir?","La lamination donne un effet plein, lifté et fluffy, idéal pour des sourcils indisciplinés, clairsemés ou asymétriques. Le brow sculpt combine épilation de précision et teinture hybride pour des sourcils nets et définis, sans l'engagement de la lamination."],["Est-ce sécuritaire?","La lamination est considérée comme sécuritaire lorsqu'elle est faite par une professionnelle expérimentée, ce qui réduit les risques pour la peau, les sourcils et les yeux."],["Combien de temps ça dure?","Lamination : environ 6 à 8 semaines selon ta pousse et ton entretien. Épilation : 3 à 4 semaines. Teinture hybride : jusqu'à 7–10 jours sur la peau et 6 semaines sur les poils."],["Où est le studio?","À Laval, QC. L'adresse exacte t'est envoyée à la confirmation de ton rendez-vous."]],
 f_k:"Ton tour",f_t:"Réveille-toi avec <em>des sourcils parfaits</em>",f_p:"Les places partent vite. Réserve maintenant, ou commence par une consultation offerte.",f_c2:"Consultation offerte",
-ft_p:"Studio de sourcils · Laval, QC",mb:"Réserver mes sourcils",snd_off:"Ambiance",snd_on:"Ambiance activée",ask_t:"Entre dans l'ambiance du salon",ask_p:"Une musique douce pour te détendre, comme si tu étais déjà installée chez Asha.",ask_y:"Entrer avec l'ambiance",ask_n:"Entrer en silence",w_k:"Bienvenue",w_t:"Entre dans <em>l'ambiance du salon</em>",w_note:"Tu peux couper le son à tout moment avec le bouton Ambiance."
+ft_p:"Studio de sourcils · Laval, QC",mb:"Réserver mes sourcils",snd_off:"Ambiance",snd_on:"Ambiance activée",ask_t:"Entre dans l'ambiance du salon",ask_p:"Une musique douce pour te détendre, comme si tu étais déjà installée chez Asha.",ask_y:"Entrer avec l'ambiance",ask_n:"Entrer en silence",w_note:"Tu peux couper le son à tout moment avec le bouton Ambiance."
 },
 en:{
+w_k:"Made for you",w_t:"Hi <em>Asha</em>,",w_p1:"I designed this website for your shop. Take a look around, and let me know if you like it and see its potential.",w_p2:"If you do, I'll take the time to finish it and launch it as your real website, on your own domain.",w_sig:"— Ismail",w_amb:"For the full experience, enter with the salon ambiance:",fb_k:"Your turn",fb_t:"Tell me what <em>you think</em>",fb_p:"What did you like? What didn't you like? Tell me everything, and I'll add it, change it or remove it.",fb_ph:"I loved… I'd change… I'd add…",fb_send:"Send by text",fb_copy:"Copy my message",fb_copied:"Copied ✓",fb_pill:"Your feedback",fb_why:"What a website can do for you",fb_list:["It takes care of your repetitive tasks: prices, policies, aftercare and booking are explained 24/7, so you get fewer DMs asking the same questions.","It works on its own, day and night, and can bring you new clients who find you on Google.","More clients means room to grow, and eventually to hire.","You'll be better known across Montréal and all of Québec."],fb_me:"I'm relaunching the web design agency I started in 2021, and I'd love for Brows by A to be one of its first projects.",fb_sms:"Hi Ismail! About the Brows by A website: ",
 n1:"Your style",n2:"Menu",n3:"Results",n4:"Asha",n5:"Training",book:"Book now",
 h_k:"Brow studio · Laval",h1a:"Brows made",h1b:"just for you,",h1c:"<em>effortlessly.</em>",
 lead:"Lamination, brow sculpting and hybrid tint, custom-designed by Asha. For the woman who wants to wake up already done.",
@@ -786,7 +843,7 @@ care:[[["Come makeup-free","on the brow area for the most precise result."],["Sk
 faq_t:"Frequently <em>asked</em>",
 faq:[["Lamination or brow sculpt — which one?","Lamination gives a full, lifted, fluffy look, ideal for unruly, sparse or uneven brows. Brow sculpt pairs a precision wax with hybrid tint for crisp, defined brows without the commitment of lamination."],["Is it safe?","Brow lamination is considered safe when done by an experienced professional, which reduces the risk to your skin, brows and eyes."],["How long does it last?","Lamination: about 6–8 weeks depending on your growth cycle and aftercare. Wax: 3–4 weeks. Hybrid tint: up to 7–10 days on skin and 6 weeks on hairs."],["Where is the studio?","In Laval, QC. The exact address is sent when your appointment is confirmed."]],
 f_k:"Your turn",f_t:"Wake up with <em>perfect brows</em>",f_p:"Spots go fast. Book now, or start with a free consultation.",f_c2:"Free consultation",
-ft_p:"Brow studio · Laval, QC",mb:"Book my brows",snd_off:"Ambiance",snd_on:"Ambiance on",ask_t:"Step into the salon",ask_p:"Soft, relaxing music, as if you were already settled in at Asha's.",ask_y:"Enter with ambiance",ask_n:"Enter in silence",w_k:"Welcome",w_t:"Step into <em>the salon</em>",w_note:"You can turn the sound off anytime with the Ambiance button."
+ft_p:"Brow studio · Laval, QC",mb:"Book my brows",snd_off:"Ambiance",snd_on:"Ambiance on",ask_t:"Step into the salon",ask_p:"Soft, relaxing music, as if you were already settled in at Asha's.",ask_y:"Enter with ambiance",ask_n:"Enter in silence",w_note:"You can turn the sound off anytime with the Ambiance button."
 }};
 
 const SVC=[
@@ -856,7 +913,7 @@ function renderCare(){$("#cList").innerHTML=T[lang].care[ctab].map(c=>`<li><div>
 function setNote(i){note=(i+NOTES.length)%NOTES.length;$$(".note").forEach((n,k)=>n.classList.toggle("on",k===note));$$("#hearts button").forEach((h,k)=>h.classList.toggle("on",k===note))}
 function restartNotes(){clearInterval(noteTimer);noteTimer=setInterval(()=>{if(!document.hidden)setNote(note+1)},5200)}
 
-$$(".lang button").forEach(b=>b.onclick=()=>{lang=b.dataset.lang;try{localStorage.setItem("ba_lang",lang)}catch(e){}render();sndLabel()});
+$$(".lang button").forEach(b=>b.onclick=()=>{lang=b.dataset.lang;try{localStorage.setItem("ba_lang",lang)}catch(e){}render();sndLabel();fbRender()});
 $$(".seg button").forEach(b=>b.onclick=()=>{grp=b.dataset.g;openId=SVC.find(s=>s.g===grp).id;renderMenu()});
 $("#tint").onchange=updCard;
 $("#cR").oninput=e=>$("#cmp").style.setProperty("--p",e.target.value+"%");
@@ -914,7 +971,23 @@ $("#askYes").onclick=()=>{closeAsk();startAmb()};
 $("#askNo").onclick=closeAsk;
 addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#ask").classList.contains("on"))closeAsk()});
 document.addEventListener("visibilitychange",()=>{if(!ambOn)return;if(document.hidden){wasPlaying=!audio.paused;audio.pause()}else if(wasPlaying){audio.play().catch(()=>{})}});
-render();restartNotes();sndLabel();
+
+// ---- FEEDBACK CARD at the bottom ----
+function fbRender(){const d=T[lang];$("#fbList").innerHTML=d.fb_list.map(x=>`<li>${x}</li>`).join("");$("#fbText").placeholder=d.fb_ph;fbSmsHref()}
+function fbSmsHref(){$("#fbSms").href="sms:?&body="+encodeURIComponent(T[lang].fb_sms+$("#fbText").value)}
+function openFb(){$("#fb").classList.add("on");document.body.classList.add("fbopen");$("#fbPill").classList.remove("on")}
+function closeFb(){$("#fb").classList.remove("on");document.body.classList.remove("fbopen");$("#fbPill").classList.add("on")}
+let fbShown=false;
+const fbIO=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&!fbShown&&!$("#ask").classList.contains("on")){fbShown=true;setTimeout(openFb,600)}}),{threshold:.35});
+fbIO.observe(document.querySelector("footer"));
+$("#fbX").onclick=closeFb;$("#fbPill").onclick=openFb;
+$("#fb").addEventListener("click",e=>{if(e.target.id==="fb")closeFb()});
+addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#fb").classList.contains("on"))closeFb()});
+$("#fbText").addEventListener("input",fbSmsHref);
+$("#fbSms").addEventListener("click",()=>{fbSmsHref();$("#fbSms").removeAttribute("target")});
+$("#fbCopy").onclick=()=>{const txt=T[lang].fb_sms+$("#fbText").value;const done=()=>{$("#fbCopy").textContent=T[lang].fb_copied;setTimeout(()=>$("#fbCopy").textContent=T[lang].fb_copy,2200)};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(done).catch(()=>{$("#fbText").select();try{document.execCommand("copy");done()}catch(e){}});else{$("#fbText").select();try{document.execCommand("copy");done()}catch(e){}}};
+render();restartNotes();sndLabel();fbRender();
 </script>
 </body>
 </html>
