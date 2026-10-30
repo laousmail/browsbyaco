@@ -479,9 +479,28 @@ body.amb .arch-line{animation-duration:3.2s}
 .nav .btn-rose{padding-left:46px!important;padding-right:30px!important}
 .mbar .btn-rose{padding-top:16px;padding-bottom:16px}
 
+
+/* WELCOME GATE */
+.welcome{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:24px;background:radial-gradient(60% 50% at 50% 40%,rgba(255,79,163,.28),transparent 70%),radial-gradient(50% 40% at 100% 100%,rgba(170,90,255,.18),transparent 70%),rgba(24,10,20,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;visibility:hidden;transition:opacity .9s ease,visibility 0s .9s}
+.welcome.on{opacity:1;visibility:visible;transition:opacity .9s ease}
+.w-in{text-align:center;max-width:520px;transform:translateY(14px);transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+.welcome.on .w-in{transform:none}
+.w-mono{display:inline-block;padding:26px 34px 20px;border:2px solid #ffd0e6;border-radius:999px 999px 18px 18px;margin-bottom:28px;filter:drop-shadow(0 0 4px #ff6fb5) drop-shadow(0 0 16px #ff4fa3);animation:hum 5s ease-in-out infinite}
+.w-mono .ba{display:block;font-family:var(--disp);font-size:3.2rem;line-height:1;color:#ffe6f2;letter-spacing:-.05em}
+.w-mono .ba i{font-style:italic;color:#ffd6ea;margin-left:-.08em}
+.w-mono small{display:block;margin-top:8px;font-size:.66rem;letter-spacing:.32em;text-transform:uppercase;color:#ffb8d8}
+.welcome.on .w-mono{animation:flick 2.4s ease-out 1,hum 5s ease-in-out 2.4s infinite}
+.w-k{font-size:.8rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#ff9fcd}
+.welcome h2{margin:12px 0 0;font-size:clamp(2rem,6vw,2.9rem)}
+.welcome p{color:var(--soft);margin:14px auto 30px;max-width:420px;font-size:1.05rem}
+.w-row{display:flex;flex-direction:column;align-items:center;gap:14px}
+.w-row .btn{min-width:260px}
+.w-note{margin-top:22px;font-size:.82rem;color:rgba(210,182,198,.75)}
+body.gate{overflow:hidden}
+
 </style>
 </head>
-<body>
+<body class="gate">
 
 <header id="hdr">
   <div class="wrap nav">
@@ -694,11 +713,15 @@ body.amb .arch-line{animation-duration:3.2s}
 </footer>
 
 <div class="mbar" id="mbar"><a class="btn btn-rose bk" href="#" data-t="mb"></a><a class="btn ig" href="https://www.instagram.com/browsbya.co" target="_blank" rel="noopener" aria-label="Instagram">♡</a></div>
-<div class="amb-ask" id="ask" role="dialog" aria-label="Ambiance">
-  <div class="ic">♪</div>
-  <h4 data-t="ask_t"></h4>
-  <p data-t="ask_p"></p>
-  <div class="row"><button class="btn btn-rose" id="askYes" data-t="ask_y"></button><button class="no" id="askNo" data-t="ask_n"></button></div>
+<div class="welcome on" id="ask" role="dialog" aria-modal="true" aria-labelledby="wTitle">
+  <div class="w-in">
+    <div class="w-mono"><span class="ba">B<i>A</i></span><small>Brows by A</small></div>
+    <div class="w-k" data-t="w_k"></div>
+    <h2 id="wTitle" data-h="w_t"></h2>
+    <p data-t="ask_p"></p>
+    <div class="w-row"><button class="btn btn-rose" id="askYes"><span>♪</span>&nbsp;<span data-t="ask_y"></span></button><button class="btn btn-ghost" id="askNo" data-t="ask_n"></button></div>
+    <div class="w-note" data-t="w_note"></div>
+  </div>
 </div>
 <div class="lb" id="lb"><img id="lbImg" alt=""><button id="lbX" aria-label="Close">×</button></div>
 
@@ -734,7 +757,7 @@ care:[[["Viens démaquillée","sur la zone des sourcils, pour un résultat préc
 faq_t:"Questions <em>fréquentes</em>",
 faq:[["Lamination ou brow sculpt : que choisir?","La lamination donne un effet plein, lifté et fluffy, idéal pour des sourcils indisciplinés, clairsemés ou asymétriques. Le brow sculpt combine épilation de précision et teinture hybride pour des sourcils nets et définis, sans l'engagement de la lamination."],["Est-ce sécuritaire?","La lamination est considérée comme sécuritaire lorsqu'elle est faite par une professionnelle expérimentée, ce qui réduit les risques pour la peau, les sourcils et les yeux."],["Combien de temps ça dure?","Lamination : environ 6 à 8 semaines selon ta pousse et ton entretien. Épilation : 3 à 4 semaines. Teinture hybride : jusqu'à 7–10 jours sur la peau et 6 semaines sur les poils."],["Où est le studio?","À Laval, QC. L'adresse exacte t'est envoyée à la confirmation de ton rendez-vous."]],
 f_k:"Ton tour",f_t:"Réveille-toi avec <em>des sourcils parfaits</em>",f_p:"Les places partent vite. Réserve maintenant, ou commence par une consultation offerte.",f_c2:"Consultation offerte",
-ft_p:"Studio de sourcils · Laval, QC",mb:"Réserver mes sourcils",snd_off:"Ambiance",snd_on:"Ambiance activée",ask_t:"Entre dans l'ambiance du salon",ask_p:"Une musique douce pour te détendre, comme si tu étais déjà installée chez Asha.",ask_y:"Activer l'ambiance",ask_n:"Rester en silence"
+ft_p:"Studio de sourcils · Laval, QC",mb:"Réserver mes sourcils",snd_off:"Ambiance",snd_on:"Ambiance activée",ask_t:"Entre dans l'ambiance du salon",ask_p:"Une musique douce pour te détendre, comme si tu étais déjà installée chez Asha.",ask_y:"Entrer avec l'ambiance",ask_n:"Entrer en silence",w_k:"Bienvenue",w_t:"Entre dans <em>l'ambiance du salon</em>",w_note:"Tu peux couper le son à tout moment avec le bouton Ambiance."
 },
 en:{
 n1:"Your style",n2:"Menu",n3:"Results",n4:"Asha",n5:"Training",book:"Book now",
@@ -763,7 +786,7 @@ care:[[["Come makeup-free","on the brow area for the most precise result."],["Sk
 faq_t:"Frequently <em>asked</em>",
 faq:[["Lamination or brow sculpt — which one?","Lamination gives a full, lifted, fluffy look, ideal for unruly, sparse or uneven brows. Brow sculpt pairs a precision wax with hybrid tint for crisp, defined brows without the commitment of lamination."],["Is it safe?","Brow lamination is considered safe when done by an experienced professional, which reduces the risk to your skin, brows and eyes."],["How long does it last?","Lamination: about 6–8 weeks depending on your growth cycle and aftercare. Wax: 3–4 weeks. Hybrid tint: up to 7–10 days on skin and 6 weeks on hairs."],["Where is the studio?","In Laval, QC. The exact address is sent when your appointment is confirmed."]],
 f_k:"Your turn",f_t:"Wake up with <em>perfect brows</em>",f_p:"Spots go fast. Book now, or start with a free consultation.",f_c2:"Free consultation",
-ft_p:"Brow studio · Laval, QC",mb:"Book my brows",snd_off:"Ambiance",snd_on:"Ambiance on",ask_t:"Step into the salon",ask_p:"Soft, relaxing music, as if you were already settled in at Asha's.",ask_y:"Turn on ambiance",ask_n:"Stay silent"
+ft_p:"Brow studio · Laval, QC",mb:"Book my brows",snd_off:"Ambiance",snd_on:"Ambiance on",ask_t:"Step into the salon",ask_p:"Soft, relaxing music, as if you were already settled in at Asha's.",ask_y:"Enter with ambiance",ask_n:"Enter in silence",w_k:"Welcome",w_t:"Step into <em>the salon</em>",w_note:"You can turn the sound off anytime with the Ambiance button."
 }};
 
 const SVC=[
@@ -885,12 +908,11 @@ function startAmb(){
   const p=audio.play(); // called directly inside the tap, so phones allow it
   if(p&&p.then)p.then(()=>fade(VOL,2500)).catch(()=>{ambOn=false;document.body.classList.remove("amb");sndLabel()});else fade(VOL,2500)}
 function stopAmb(){ambOn=false;document.body.classList.remove("amb");sndLabel();fade(0,1200,()=>audio.pause())}
-function closeAsk(){$("#ask").classList.remove("on");try{sessionStorage.setItem("ba_ask","1")}catch(e){}}
-$("#snd").onclick=()=>{closeAsk();ambOn?stopAmb():startAmb()};
+function closeAsk(){$("#ask").classList.remove("on");document.body.classList.remove("gate")}
+$("#snd").onclick=()=>{ambOn?stopAmb():startAmb()};
 $("#askYes").onclick=()=>{closeAsk();startAmb()};
 $("#askNo").onclick=closeAsk;
-let asked=false;try{asked=sessionStorage.getItem("ba_ask")==="1"}catch(e){}
-if(!asked)setTimeout(()=>$("#ask").classList.add("on"),1800);
+addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#ask").classList.contains("on"))closeAsk()});
 document.addEventListener("visibilitychange",()=>{if(!ambOn)return;if(document.hidden){wasPlaying=!audio.paused;audio.pause()}else if(wasPlaying){audio.play().catch(()=>{})}});
 render();restartNotes();sndLabel();
 </script>
