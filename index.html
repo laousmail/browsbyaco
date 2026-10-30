@@ -475,6 +475,9 @@ body.amb .snd{border-color:#ffc4e0;box-shadow:0 0 16px rgba(255,79,163,.7)}
 .burger{border-color:rgba(255,150,200,.35)}
 .lb{background:rgba(15,6,12,.92)}
 body.amb .arch-line{animation-duration:3.2s}
+.btn-rose,.deep .btn-rose{padding-left:62px!important;padding-right:40px!important}
+.nav .btn-rose{padding-left:46px!important;padding-right:30px!important}
+.mbar .btn-rose{padding-top:16px;padding-bottom:16px}
 
 </style>
 </head>
@@ -870,36 +873,25 @@ const heroEl=document.querySelector(".hero");
 heroEl.addEventListener("pointermove",e=>{if(e.pointerType!=="mouse")return;const r=heroEl.getBoundingClientRect();heroEl.style.setProperty("--mx",((e.clientX-r.left)/r.width-.5)*2);heroEl.style.setProperty("--my",((e.clientY-r.top)/r.height-.5)*2)});
 heroEl.addEventListener("pointerleave",()=>{heroEl.style.setProperty("--mx",0);heroEl.style.setProperty("--my",0)});
 
-// ---- AMBIANCE: starts muted, gapless loop, smooth fades (Web Audio) ----
-const VOL=0.35;
-let ambOn=false,actx=null,gain=null,srcNode=null,buffer=null,loading=null,el=null;
+// ---- AMBIANCE: starts muted, loops, plays even with the iPhone silent switch on ----
+const VOL=0.4;
+const audio=new Audio();audio.src="ambiance.mp3";audio.loop=true;audio.preload="auto";audio.setAttribute("playsinline","");audio.volume=0;
+let ambOn=false,fadeT=null,wasPlaying=false;
+function fade(to,ms,done){clearInterval(fadeT);const steps=Math.max(1,Math.round(ms/40)),from=audio.volume;let i=0;
+  fadeT=setInterval(()=>{i++;try{audio.volume=Math.min(1,Math.max(0,from+(to-from)*(i/steps)))}catch(e){}if(i>=steps){clearInterval(fadeT);done&&done()}},40)}
 function sndLabel(){$("#snd").setAttribute("aria-pressed",ambOn);$("#snd .lb2").textContent=ambOn?T[lang].snd_on:T[lang].snd_off}
-function trim(buf){const ch=[...Array(buf.numberOfChannels)].map((_,i)=>buf.getChannelData(i)),n=buf.length,th=1e-4;let s=0,e=n-1;
-  while(s<n&&ch.every(c=>Math.abs(c[s])<th))s++;while(e>s&&ch.every(c=>Math.abs(c[e])<th))e--;
-  if(s===0&&e===n-1)return buf;const out=actx.createBuffer(buf.numberOfChannels,e-s+1,buf.sampleRate);ch.forEach((c,i)=>out.copyToChannel(c.subarray(s,e+1),i));return out}
-function loadBuf(){if(!loading)loading=fetch("ambiance.mp3").then(r=>r.arrayBuffer()).then(ab=>new Promise((res,rej)=>actx.decodeAudioData(ab,res,rej))).then(b=>buffer=trim(b));return loading}
-function ramp(v,sec){const t=actx.currentTime;gain.gain.cancelScheduledValues(t);gain.gain.setValueAtTime(gain.gain.value,t);gain.gain.linearRampToValueAtTime(v,t+sec)}
-function fallback(){ // plain audio element if Web Audio isn't available
-  if(!el){el=new Audio("ambiance.mp3");el.loop=true;el.volume=VOL}
-  el.play().then(()=>{ambOn=true;document.body.classList.add("amb");sndLabel()}).catch(()=>{})}
 function startAmb(){
-  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return fallback();
-  if(!actx){actx=new AC();gain=actx.createGain();gain.gain.value=0;gain.connect(actx.destination)}
-  actx.resume();ambOn=true;document.body.classList.add("amb");sndLabel();
-  loadBuf().then(()=>{if(!ambOn)return;
-    if(!srcNode){srcNode=actx.createBufferSource();srcNode.buffer=buffer;srcNode.loop=true;srcNode.connect(gain);srcNode.start()}
-    ramp(VOL,3)}).catch(()=>{ambOn=false;document.body.classList.remove("amb");fallback()})}
-function stopAmb(){ambOn=false;document.body.classList.remove("amb");sndLabel();
-  if(el&&!actx){el.pause();return}
-  if(actx){ramp(0,1.4);setTimeout(()=>{if(!ambOn&&actx)actx.suspend()},1500)}}
+  ambOn=true;document.body.classList.add("amb");sndLabel();
+  const p=audio.play(); // called directly inside the tap, so phones allow it
+  if(p&&p.then)p.then(()=>fade(VOL,2500)).catch(()=>{ambOn=false;document.body.classList.remove("amb");sndLabel()});else fade(VOL,2500)}
+function stopAmb(){ambOn=false;document.body.classList.remove("amb");sndLabel();fade(0,1200,()=>audio.pause())}
 function closeAsk(){$("#ask").classList.remove("on");try{sessionStorage.setItem("ba_ask","1")}catch(e){}}
 $("#snd").onclick=()=>{closeAsk();ambOn?stopAmb():startAmb()};
 $("#askYes").onclick=()=>{closeAsk();startAmb()};
 $("#askNo").onclick=closeAsk;
 let asked=false;try{asked=sessionStorage.getItem("ba_ask")==="1"}catch(e){}
 if(!asked)setTimeout(()=>$("#ask").classList.add("on"),1800);
-document.addEventListener("visibilitychange",()=>{if(!ambOn)return;
-  if(document.hidden){actx?actx.suspend():el&&el.pause()}else{actx?actx.resume():el&&el.play().catch(()=>{})}});
+document.addEventListener("visibilitychange",()=>{if(!ambOn)return;if(document.hidden){wasPlaying=!audio.paused;audio.pause()}else if(wasPlaying){audio.play().catch(()=>{})}});
 render();restartNotes();sndLabel();
 </script>
 </body>
